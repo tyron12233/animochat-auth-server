@@ -1,6 +1,6 @@
+import { createClient } from '@supabase/supabase-js';
 import { type Request, type Response } from 'express';
-import { supabase } from '../config/supabaseClient';
-
+import { createSupabaseClient } from '../config/supabaseClient';
 /**
  * @description Authenticate user and provide JWT tokens
  * @route POST /api/auth/login
@@ -12,6 +12,8 @@ export async function login(req: Request, res: Response) {
         res.status(400).json({ message: 'Email and password are required.' });
         return
     }
+
+    const supabase = createSupabaseClient(req, res);
 
     try {
         const { data, error } = await supabase.auth.signInWithPassword({
@@ -56,6 +58,7 @@ export const validateToken = async (req: Request, res: Response) => {
   }
 
   const token = authHeader.split(' ')[1];
+  const supabase = createSupabaseClient(req, res);
 
   try {
     const { data: { user }, error } = await supabase.auth.getUser(token);
@@ -92,6 +95,8 @@ export const validateToken = async (req: Request, res: Response) => {
  */
 export async function signInAnonymously(req: Request, res: Response) {
     try {
+        const supabase = createSupabaseClient(req, res);
+
         const { data, error } = await supabase.auth.signInAnonymously();
 
         if (error) {
@@ -119,6 +124,8 @@ export async function refreshToken(req: Request, res: Response) {
     }
 
     try {
+        const supabase = createSupabaseClient(req, res);
+        
         const { data, error } = await supabase.auth.refreshSession({
             refresh_token: refreshToken
         });

@@ -1,15 +1,26 @@
-import { createClient } from '@supabase/supabase-js';
-import dotenv from 'dotenv';
+// src/supabase.ts
+import { createServerClient, type CookieOptions, parse, serialize } from '@supabase/ssr';
+import { type Request, type Response } from 'express';
 
-// Load environment variables from .env file
-dotenv.config();
+export const createSupabaseClient = (req: Request, res: Response) => {
+  const supabase = createServerClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          const parsedCookies = parse(req.headers.cookie ?? '');
+          return Object.entries(parsedCookies).map(([name, value]) => ({
+            name,
+            value: value ?? ''
+          }));
+        },
+        setAll(cookiesToSet) {
+          res.setHeader('Set-Cookie', cookiesToSet.map(cookie => serialize(cookie.name, cookie.value, cookie.options)));
+        },
+      },
+    }
+  );
 
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Supabase URL and Anon Key must be provided in .env file.');
-}
-
-// Create and export the Supabase client
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+  return supabase;
+};
