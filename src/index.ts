@@ -12,7 +12,10 @@ const app = express();
 const port = process.env.PORT || 8080;
 
 // Middleware
-app.use(cors()); 
+app.use(cors({
+  credentials: true,
+  origin: 'https://chat.tyronscott.me'
+})); 
 app.use(bodyParser.json()); // Parse JSON bodies
 
 // API Routes
