@@ -7,7 +7,7 @@ export const SERVICE_URL = process.env.SERVICE_URL;
 
 export const DISCOVERY_SERVER_URL =
   process.env.DISCOVERY_SERVER_URL ||
-  "https://animochat-service-discovery-6jj5.onrender.com/services";
+  "https://animochat-service-discovery-6jj5.onrender.com";
 
 const registerService = async () => {
   try {
