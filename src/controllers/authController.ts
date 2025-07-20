@@ -41,11 +41,6 @@ export async function login(req: Request, res: Response) {
 }
 
 /**
- * @description Validate a JWT token
- * @route GET /api/auth/validate
- */
-
-/**
  * @description Validate a JWT and return user's role. To be called by other microservices.
  * @route GET /api/auth/validate
  */

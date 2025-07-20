@@ -12,7 +12,7 @@ const app = express();
 const port = process.env.PORT || 8080;
 
 // Middleware
-app.use(cors()); // Enable CORS for all routes
+app.use(cors()); 
 app.use(bodyParser.json()); // Parse JSON bodies
 
 // API Routes
